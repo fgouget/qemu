@@ -916,6 +916,10 @@ static void spice_gl_switch(DisplayChangeListener *dcl,
 static QEMUGLContext qemu_spice_gl_create_context(DisplayChangeListener *dcl,
                                                   QEMUGLParams *params)
 {
+    SimpleSpiceDisplay *ssd = container_of(dcl, SimpleSpiceDisplay, dcl);
+
+    spice_qxl_gl_setup(&ssd->qxl, qemu_egl_display);
+
     eglMakeCurrent(qemu_egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
                    qemu_egl_rn_ctx);
     return qemu_egl_create_context(dcl, params);
