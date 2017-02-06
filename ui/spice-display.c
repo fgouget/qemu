@@ -26,6 +26,8 @@
 
 #include "ui/spice-display.h"
 
+#include <dlfcn.h>
+
 bool spice_opengl;
 
 int qemu_spice_rect_is_empty(const QXLRect* r)
@@ -913,12 +915,17 @@ static void spice_gl_switch(DisplayChangeListener *dcl,
     }
 }
 
+void spice_qxl_gl_setup(QXLInstance *instance, void *egl_display);
+
 static QEMUGLContext qemu_spice_gl_create_context(DisplayChangeListener *dcl,
                                                   QEMUGLParams *params)
 {
     SimpleSpiceDisplay *ssd = container_of(dcl, SimpleSpiceDisplay, dcl);
 
-    spice_qxl_gl_setup(&ssd->qxl, qemu_egl_display);
+    typeof(spice_qxl_gl_setup) *ptr = (typeof(spice_qxl_gl_setup) *) dlsym(RTLD_DEFAULT, "spice_qxl_gl_setup");
+    if (ptr) {
+        ptr(&ssd->qxl, qemu_egl_display);
+    }
 
     eglMakeCurrent(qemu_egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE,
                    qemu_egl_rn_ctx);
