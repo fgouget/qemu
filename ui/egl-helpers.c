@@ -153,7 +153,7 @@ int egl_rendernode_init(const char *rendernode, DisplayGLMode mode)
 
     qemu_egl_rn_fd = qemu_drm_rendernode_open(rendernode);
     if (qemu_egl_rn_fd == -1) {
-        error_report("egl: no drm render node available");
+        error_report("egl: no drm render node %s available: %s", rendernode, strerror(errno));
         goto err;
     }
 
