@@ -2992,6 +2992,9 @@ int main(int argc, char **argv, char **envp)
     QSIMPLEQ_HEAD(, BlockdevOptions_queue) bdo_queue
         = QSIMPLEQ_HEAD_INITIALIZER(bdo_queue);
 
+    /* Easy debugging from libvirt... */
+    g_setenv("G_MESSAGES_DEBUG", "all", 1);
+    fprintf(stderr, "%s:%d set G_MESSAGES_DEBUG=all\n", __FILE__, __LINE__);
     module_call_init(MODULE_INIT_TRACE);
 
     qemu_init_cpu_list();
